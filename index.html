@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#183D2B">
+    <title>Agenda Poda</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body>
+    <div class="app-layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <span class="brand-icon">🌳</span>
+          <div>
+            <h1>Agenda Poda</h1>
+            <p>Organización de trabajo</p>
+          </div>
+        </div>
+        <p class="menu-label">MENÚ PRINCIPAL</p>
+        <nav class="side-nav" aria-label="Navegación principal">
+          <button class="nav-item active" data-page="inicio">
+            <span>⌂</span> Inicio
+          </button>
+          <button class="nav-item" data-page="calendario">
+            <span>▦</span> Calendario
+          </button>
+          <button class="nav-item" data-page="clientes">
+            <span>♙</span> Clientes
+          </button>
+          <button class="nav-item" data-page="trabajos">
+            <span>✂</span> Trabajos
+          </button>
+          <button class="nav-item" data-page="presupuestos">
+            <span>＄</span> Presupuestos
+          </button>
+          <p class="menu-label secondary-label">CONTROL</p>
+          <button class="nav-item" data-page="estadisticas">
+            <span>▥</span> Estadísticas
+          </button>
+          <button class="nav-item" data-page="configuracion">
+            <span>⚙</span> Configuración
+          </button>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="sidebar-footer-icon">🌱</span>
+          <div>
+            <strong>Agenda Poda</strong>
+            <p>Tu trabajo, organizado.</p>
+          </div>
+        </div>
+      </aside>
+      <div class="sidebar-overlay" id="sidebarOverlay"></div>
+      <div class="main-column">
+        <header class="topbar">
+          <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-expanded="false">
+            ☰
+          </button>
+          <div class="topbar-title">
+            <span id="pageEyebrow">TU ESPACIO DE TRABAJO</span>
+            <h2 id="pageTitle">Inicio</h2>
+          </div>
+          <button class="today-top-button" id="todayTopButton">
+            Hoy
+          </button>
+        </header>
+        <main id="app"></main>
+        <footer class="app-footer">
+          by <strong>ArcaPixelesStudio</strong>
+        </footer>
+      </div>
+    </div>
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/clients.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/cuts.js"></script>
+    <script src="js/receipts.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
