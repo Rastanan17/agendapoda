@@ -94,7 +94,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .app-footer { padding: 20px 16px; color: var(--muted); text-align: center; font-size: 12px; letter-spacing: 0.5px; }
 .app-footer strong { color: var(--text); }
 .sidebar-overlay { display: none; }
-
 @media (min-width: 1400px) { .calendar-day { min-height: 115px; } }
 @media (max-width: 1000px) {
   .sidebar { width: 220px; }
@@ -131,7 +130,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
   .calendar-actions { gap: 5px; }
   .calendar-actions button { min-width: 32px; padding: 0 8px; }
 }
-
 .calendar-action-card { margin-top: 18px; }
 .calendar-action-card > p { margin-bottom: 18px; color: var(--muted); font-size: 14px; }
 .calendar-action-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
@@ -151,12 +149,10 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .calendar-action-grid button { display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); text-align: left; font-size: 13px; font-weight: 700; transition: background 0.15s ease, border-color 0.15s ease; }
 .calendar-action-grid button:hover { background: var(--border); border-color: var(--green-600); }
 .calendar-action-icon { flex-shrink: 0; font-size: 23px; }
-
 @keyframes calendar-modal-in {
   from { opacity: 0; transform: translateY(8px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 @media (max-width: 480px) {
   .calendar-modal-overlay { padding: 12px; }
   .calendar-action-modal { max-height: calc(100vh - 24px); }
@@ -166,7 +162,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
   .calendar-action-grid { grid-template-columns: 1fr; }
   .calendar-action-grid button { min-height: 58px; }
 }
-
 .cut-form-modal { max-width: 600px; }
 .cut-form { display: flex; flex-direction: column; gap: 17px; padding: 24px; }
 .cut-form-field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
@@ -194,7 +189,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .cut-primary-button { border: 0; background: var(--green-600); color: var(--green-950); }
 .cut-primary-button:hover { background: #82e232; }
 .cut-form-footer button:active { transform: scale(0.98); }
-
 .calendar-event-list { display: flex; flex-direction: column; gap: 12px; }
 .calendar-event-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 15px; border: 1px solid var(--border); border-radius: 13px; background: var(--bg); }
 .calendar-event-info { display: flex; flex: 1; flex-direction: column; align-items: flex-start; gap: 7px; min-width: 0; }
@@ -207,7 +201,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .calendar-event-open:hover { border-color: var(--green-600); background: var(--border); }
 .day-event.completed { border-left-color: var(--green-600); background: rgba(118, 211, 40, 0.2); color: var(--green-100); }
 .more-events { border-left-color: var(--muted); background: var(--border); color: var(--text); }
-
 [data-event-details-overlay] .calendar-action-modal { max-width: 560px; }
 [data-event-details-overlay] .calendar-modal-body { padding: 22px 24px 25px; }
 [data-event-details-overlay] .calendar-modal-body > p { margin: 0; padding: 11px 0; border-bottom: 1px solid var(--border); color: var(--text); font-size: 0.92rem; line-height: 1.5; overflow-wrap: anywhere; }
@@ -220,7 +213,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 [data-event-delete] { border-color: var(--red) !important; color: var(--red) !important; }
 [data-event-delete] .calendar-action-icon { background: var(--red-bg); color: var(--red); }
 .cut-form button:focus-visible, .calendar-action-modal button:focus-visible, .calendar-event-open:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
-
 @media (max-width: 600px) {
   .cut-form { gap: 15px; padding: 18px; }
   .cut-form-row, .cut-photo-actions { grid-template-columns: 1fr; gap: 15px; }
@@ -233,7 +225,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
   [data-event-details-overlay] .calendar-action-grid button { min-height: 88px; padding: 10px 7px; font-size: 0.78rem; }
 }
 @media (max-width: 360px) { [data-event-details-overlay] .calendar-action-grid { grid-template-columns: 1fr; } }
-
 .calendar-modal-events { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 24px; max-height: 260px; overflow-y: auto; }
 .calendar-modal-event { display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--bg); color: var(--text); text-align: left; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
 .calendar-modal-event:hover { border-color: var(--green-600); background: var(--border); }
@@ -245,7 +236,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .calendar-modal-actions-title { margin-top: 8px; }
 .calendar-modal-empty { margin: 16px 0 24px; padding: 18px; border-radius: 14px; background: var(--bg); }
 .calendar-modal-empty p { margin-bottom: 0; }
-
 .clients-section, .jobs-section { padding: 24px; }
 .clients-toolbar, .jobs-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
 .client-search { flex: 1; min-width: 0; max-width: 480px; padding: 13px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); font: inherit; outline: none; }
@@ -288,7 +278,6 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .client-form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .client-form-hint { margin: 0; color: var(--muted); font-size: 12px; }
 .client-form-actions { display: flex; justify-content: flex-end; gap: 10px; padding-top: 6px; }
-
 @media (max-width: 600px) {
   .clients-section, .jobs-section { padding: 16px; }
   .clients-toolbar { align-items: stretch; flex-direction: column; }
@@ -304,27 +293,22 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
   .client-form-actions { flex-direction: column-reverse; }
   .client-form-actions button { width: 100%; }
 }
-
 .job-card-info .job-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
 .job-card-actions .secondary-button { min-height: 38px; padding: 8px 12px; font-size: 13px; }
 .job-delete-button { min-height: 38px; padding: 8px 12px; border: 1px solid rgba(217, 83, 79, 0.4); border-radius: 12px; background: var(--bg); color: var(--red); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
 .job-delete-button:hover { background: var(--red-bg); }
-
 @media (max-width: 600px) {
   .job-card-info .job-card-actions { flex-direction: column; align-items: stretch; }
   .job-card-actions button { width: 100%; }
 }
-
 .service-type-options, .client-service-options, .service-choice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 12px 0 18px; }
 .service-type-options label, .client-service-options label, .service-choice label { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); font-weight: 600; text-align: center; cursor: pointer; transition: background 0.2s, border-color 0.2s; }
 .service-type-options label:has(input:checked), .client-service-options label:has(input:checked), .service-choice label:has(input:checked) { background: rgba(118, 211, 40, 0.15); border-color: var(--green-600); color: var(--green-100); box-shadow: inset 0 0 0 1px var(--green-600); }
 .service-type-options input, .client-service-options input, .service-choice input { accent-color: var(--green-600); }
-
 @media (max-width: 420px) {
   .service-type-options, .client-service-options, .service-choice { gap: 8px; }
   .service-type-options label, .client-service-options label, .service-choice label { padding: 10px 6px; font-size: 14px; }
 }
-
 .client-service-choice { margin: 8px 0 18px; }
 .client-service-title { display: block; margin-bottom: 10px; color: var(--text); font-size: 14px; font-weight: 600; }
 .client-service-options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -335,3 +319,279 @@ button:focus-visible { outline: 3px solid var(--amber); outline-offset: 3px; }
 .client-service-name { font-size: 15px; font-weight: 700; }
 .client-service-option small { font-size: 11px; line-height: 1.4; color: var(--muted); }
 .client-service-option:focus-within { outline: 2px solid var(--green-600); outline-offset: 3px; }
+
+/* === MOVIMIENTOS DE DINERO === */
+
+#movementForm {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+#movementForm label {
+  margin-top: 5px;
+  color: var(--text);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#movementForm input,
+#movementForm select {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  box-sizing: border-box;
+}
+
+#movementForm input::placeholder {
+  color: var(--muted);
+}
+
+#movementForm input:focus,
+#movementForm select:focus {
+  outline: none;
+  border-color: var(--green-600);
+  box-shadow: 0 0 0 3px rgba(118, 211, 40, 0.2);
+}
+
+#movementForm select option {
+  background: var(--surface);
+  color: var(--text);
+}
+
+#movementForm button {
+  width: 100%;
+  margin-top: 8px;
+}
+
+/* Tarjetas y balance */
+#app .content-card > h3 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+#app .content-card p {
+  line-height: 1.6;
+}
+
+#app .content-card strong {
+  color: var(--green-600);
+}
+
+/* Historial de movimientos */
+#app .jobs-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+#app .job-card {
+  display: block;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--bg);
+  box-sizing: border-box;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+#app .job-card:hover {
+  border-color: var(--green-600);
+  background: var(--surface);
+}
+
+#app .job-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
+
+#app .job-card-info h3 {
+  margin: 0;
+  color: var(--text);
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+#app .job-card-info p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+#app .job-card-info strong {
+  font-size: 1.1rem;
+  color: var(--green-600);
+}
+
+#app .job-card-info button {
+  margin-top: 4px;
+}
+
+/* Pantallas grandes */
+@media (min-width: 700px) {
+  #movementForm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
+  }
+
+  #movementForm button {
+    grid-column: 1 / -1;
+  }
+
+  #app .jobs-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+  #app .content-card {
+    padding: 18px 14px;
+  }
+
+  #movementForm {
+    gap: 10px;
+  }
+
+  #app .job-card {
+    padding: 14px;
+  }
+}
+
+/* === ESTADÍSTICAS === */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.stats-card {
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  box-sizing: border-box;
+}
+
+.stats-card-icon {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 1.7rem;
+}
+
+.stats-card p {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.stats-card strong {
+  display: block;
+  color: var(--green-600);
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.stats-card small {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-section > h3 {
+  margin-top: 0;
+  color: var(--text);
+}
+
+.stats-job-list {
+  display: grid;
+  gap: 12px;
+}
+
+.stats-job {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.stats-job > div {
+  min-width: 0;
+}
+
+.stats-job strong {
+  display: block;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.stats-job p {
+  margin: 6px 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.stats-job small {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.stats-job > span {
+  flex-shrink: 0;
+  color: var(--green-600);
+  font-weight: 700;
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stats-card {
+    padding: 16px;
+  }
+
+  .stats-job {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .stats-job > span {
+    text-align: left;
+  }
+}

@@ -45,6 +45,11 @@ window.AgendaPoda = window.AgendaPoda || {};
       eyebrow: "CONTROL DE PRESUPUESTOS",
       description: "Acá prepararemos presupuestos para clientes y llevaremos el control de los importes."
     },
+    movimientos: {
+      title: "Movimientos",
+      eyebrow: "ECONOMÍA",
+      description: "Ingresos, gastos y saldo del trabajo."
+    },
     estadisticas: {
       title: "Estadísticas",
       eyebrow: "RESUMEN DEL NEGOCIO",

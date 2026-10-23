@@ -37,11 +37,19 @@
       return;
     }
 
-    if (AP.state.currentPage === "trabajos") {
-      app.innerHTML = renderJobs();
-      return;
-    }
+   if (AP.state.currentPage === "trabajos") {
+  app.innerHTML = renderJobs();
+  return;
+}
 
+if (AP.state.currentPage === "movimientos" && AP.movements) {
+  app.innerHTML = AP.movements.render();
+  return;
+}
+if (AP.state.currentPage === "estadisticas" && AP.statistics) {
+  app.innerHTML = AP.statistics.render();
+  return;
+}
     app.innerHTML = `
       <section class="page-intro">
         <h2>${AP.utils.escapeHTML(page.title)}</h2>
@@ -93,6 +101,13 @@ function renderJobs() {
                 const date =
                   job.completedDate || job.scheduledDate || job.date || "";
 
+                  const price = Number(job.price) || 0;
+const paid = Number(job.paid) || 0;
+const balance = job.balance != null
+  ? Math.max(0, Number(job.balance) || 0)
+  : Math.max(0, price - paid);
+
+const isCut = job.type === "corte_unico";
                 return `
                   <article class="job-card">
                     <div class="job-card-icon">🌿</div>
@@ -110,14 +125,37 @@ function renderJobs() {
                         ${completed ? "Realizado" : "Pendiente"}
                       </span>
 
-                      <div class="job-card-actions">
-                        <button
-                          type="button"
-                          class="primary-button"
-                          data-calendar-view-event="${id}">
-                          Ver detalles
-                        </button>
-                      </div>
+                      ${isCut ? `
+  <div class="job-financial-details">
+    <p><span>Precio</span><strong>${formatMoney(price)}</strong></p>
+    <p><span>Cobrado</span><strong>${formatMoney(paid)}</strong></p>
+    <p><span>Saldo pendiente</span><strong>${formatMoney(balance)}</strong></p>
+  </div>
+` : ""}
+
+<div class="job-card-actions">
+  <button
+    type="button"
+    class="primary-button"
+    data-calendar-view-event="${id}">
+    Ver detalles
+  </button>
+
+  <button
+    type="button"
+    class="secondary-button"
+    data-event-edit="${id}">
+    Editar
+  </button>
+
+  <button
+    type="button"
+    class="secondary-button"
+    data-event-delete="${id}">
+    Eliminar
+  </button>
+</div>
+
                     </div>
                   </article>
                 `;
@@ -201,7 +239,7 @@ function renderJobs() {
     if (AP.clients) {
       AP.clients.init();
     }
-
+    if (AP.movements) AP.movements.init();
     initNavigation();
     AP.render();
 
