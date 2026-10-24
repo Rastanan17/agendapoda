@@ -134,6 +134,177 @@
       }
     },
 
+openRecurringForm(cut) {
+  if (!cut || cut.type !== "corte_unico") {
+    alert("No se encontró el corte seleccionado.");
+    return;
+  }
+
+  document.querySelector("[data-recurring-form-overlay]")?.remove();
+
+  const overlay = document.createElement("div");
+  overlay.className = "calendar-modal-overlay visible";
+  overlay.dataset.recurringFormOverlay = "";
+
+  const baseDate = cut.completedDate || cut.scheduledDate || cut.date;
+  const suggestedDate = this.getNextRecurringDate(baseDate, {
+    enabled: true,
+    interval: 1,
+    unit: "months"
+  });
+
+  const escape = e.utils.escapeHTML;
+
+  overlay.innerHTML = `
+    <section class="calendar-action-modal" role="dialog"
+      aria-modal="true" aria-labelledby="recurringFormTitle">
+
+      <header class="calendar-modal-header">
+        <div>
+          <span class="calendar-modal-eyebrow">NUEVO MANTENIMIENTO</span>
+          <h2 id="recurringFormTitle">Programar próximo corte</h2>
+        </div>
+        <button type="button" class="calendar-modal-close"
+          data-recurring-cancel aria-label="Cerrar">×</button>
+      </header>
+
+      <div class="calendar-modal-body">
+        <p>Cliente: <strong>${escape(cut.clientName || cut.title || "")}</strong></p>
+
+        <form data-recurring-form class="client-form">
+          <label>
+            Fecha del próximo corte *
+            <input name="scheduledDate" type="date"
+              value="${suggestedDate}" required>
+          </label>
+
+          <label>
+            <input name="recurringEnabled" type="checkbox" checked>
+            Continuar con mantenimiento periódico
+          </label>
+
+          <div data-recurring-options>
+            <label>
+              Repetir cada
+              <input name="interval" type="number"
+                min="1" max="365" value="1" required>
+            </label>
+
+            <label>
+              Unidad
+              <select name="unit">
+                <option value="days">Días</option>
+                <option value="weeks">Semanas</option>
+                <option value="months" selected>Meses</option>
+              </select>
+            </label>
+          </div>
+
+          <p class="client-form-hint">
+            El corte anterior no se modifica. Se creará un nuevo trabajo
+            pendiente para la fecha elegida.
+          </p>
+
+          <div class="client-form-actions">
+            <button type="button" class="secondary-button"
+              data-recurring-cancel>Cancelar</button>
+            <button type="submit" class="primary-button">
+              Programar corte
+            </button>
+          </div>
+        </form>
+      </div>
+    </section>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const form = overlay.querySelector("[data-recurring-form]");
+  const checkbox = form.elements.recurringEnabled;
+  const options = form.querySelector("[data-recurring-options]");
+
+  checkbox.addEventListener("change", () => {
+    options.hidden = !checkbox.checked;
+  });
+
+  overlay.querySelectorAll("[data-recurring-cancel]").forEach(button => {
+    button.addEventListener("click", () => overlay.remove());
+  });
+
+  overlay.addEventListener("click", event => {
+    if (event.target === overlay) overlay.remove();
+  });
+
+  form.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const scheduledDate = form.elements.scheduledDate.value;
+    const interval = Number(form.elements.interval.value);
+    const unit = form.elements.unit.value;
+
+    if (!scheduledDate) {
+      alert("Elegí la fecha del próximo corte.");
+      return;
+    }
+
+    if (checkbox.checked &&
+        (!Number.isInteger(interval) || interval < 1)) {
+      alert("Ingresá una frecuencia válida.");
+      return;
+    }
+
+    const nextCut = {
+      ...cut,
+      id: `cut_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+      scheduledDate,
+      completedDate: "",
+      date: scheduledDate,
+      status: "pendiente",
+      completed: false,
+      paid: 0,
+      balance: Number(cut.price) || 0,
+      paymentMethod: "pendiente",
+      photo: null,
+      recurring: checkbox.checked
+        ? {
+            enabled: true,
+            interval,
+            unit,
+            nextDate: scheduledDate
+          }
+        : {
+            enabled: false,
+            interval: 0,
+            unit: "days",
+            nextDate: ""
+          },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+
+    e.state.events.push(nextCut);
+
+    const saved = await this.persistEvents();
+
+    if (!saved) {
+      e.state.events = e.state.events.filter(
+        item => String(item.id) !== String(nextCut.id)
+      );
+      return;
+    }
+
+    overlay.remove();
+    e.state.selectedDate = this.parseDateKey(scheduledDate);
+    e.state.calendarMonth = new Date(
+      e.state.selectedDate.getFullYear(),
+      e.state.selectedDate.getMonth(),
+      1
+    );
+
+    e.render();
+  });
+},
+
     openEventDetails(t) {
       const a = e.state.events.find(e => String(e.id) === String(t));
       if (!a) return void alert("No se encontró ese trabajo.");
@@ -151,7 +322,12 @@
   <p><strong>Fecha real de visita:</strong> ${
     r(this.formatDate(a.visitCompletedDate))
   }</p>
-` : ""}${l ? `<p><strong>Cliente:</strong> ${r(a.clientName)}</p><p><strong>Teléfono:</strong> ${r(a.phone || "No informado")}</p><p><strong>Dirección:</strong> ${r(a.address || "No informada")}</p><p><strong>Localidad:</strong> ${r(a.locality || "No informada")}</p><p><strong>Terreno:</strong> ${Number(a.areaM2) || 0} m²</p><p><strong>Precio:</strong> ${this.formatMoney(a.price)}</p><p><strong>Abonado:</strong> ${this.formatMoney(a.paid)}</p><p><strong>Saldo:</strong> ${this.formatMoney(a.balance)}</p><p><strong>Forma de pago:</strong> ${r(this.paymentLabel(a.paymentMethod))}</p>${a.completedDate ? `<p><strong>Fecha real del corte:</strong> ${r(this.formatDate(a.completedDate))}</p>` : ""}${a.photo ? `<img src="${a.photo}" alt="Foto del trabajo" style="display:block;max-width:100%;max-height:220px;object-fit:contain;border-radius:12px;margin:12px auto;">` : ""}` : ""}<div class="calendar-action-grid">${l ? `<button type="button" data-event-edit="${r(a.id)}"><span class="calendar-action-icon">✏️</span><span>Editar</span></button><button type="button" data-event-receipt="${r(a.id)}"><span class="calendar-action-icon">🧾</span><span>Descargar comprobante</span></button><button type="button" data-event-whatsapp="${r(a.id)}"><span class="calendar-action-icon">📲</span><span>Compartir por WhatsApp</span></button>` : ""}<button type="button" data-event-toggle-status="${r(a.id)}"><span class="calendar-action-icon">${n ? "↩️" : "✅"}</span><span>${n ? "Marcar pendiente" : "Marcar realizado"}</span></button><button type="button" data-event-delete="${r(a.id)}"><span class="calendar-action-icon">🗑️</span><span>Eliminar trabajo</span></button></div></div></section>`;
+` : ""}${l ? `<p><strong>Cliente:</strong> ${r(a.clientName)}</p><p><strong>Teléfono:</strong> ${r(a.phone || "No informado")}</p><p><strong>Dirección:</strong> ${r(a.address || "No informada")}</p><p><strong>Localidad:</strong> ${r(a.locality || "No informada")}</p><p><strong>Terreno:</strong> ${Number(a.areaM2) || 0} m²</p><p><strong>Precio:</strong> ${this.formatMoney(a.price)}</p><p><strong>Abonado:</strong> ${this.formatMoney(a.paid)}</p><p><strong>Saldo:</strong> ${this.formatMoney(a.balance)}</p><p><strong>Forma de pago:</strong> ${r(this.paymentLabel(a.paymentMethod))}</p>${a.completedDate ? `<p><strong>Fecha real del corte:</strong> ${r(this.formatDate(a.completedDate))}</p>` : ""}${a.photo ? `<img src="${a.photo}" alt="Foto del trabajo" style="display:block;max-width:100%;max-height:220px;object-fit:contain;border-radius:12px;margin:12px auto;">` : ""}` : ""}
+<div class="calendar-action-grid">${l ? `<button type="button" data-event-edit="${r(a.id)}">
+<span class="calendar-action-icon">✏️</span><span>Editar</span></button><button type="button" data-event-receipt="${r(a.id)}"><span class="calendar-action-icon">🧾</span><span>Descargar comprobante</span></button><button type="button" data-event-whatsapp="${r(a.id)}"><span class="calendar-action-icon">📲</span><span>Compartir por WhatsApp</span></button>` : ""}<button type="button" data-event-toggle-status="${r(a.id)}"><span class="calendar-action-icon">${n ? "↩️" : "✅"}</span><span>${n ? "Marcar pendiente" : "Marcar realizado"}</span></button><button type="button" data-event-delete="${r(a.id)}"><span class="calendar-action-icon">🗑️</span><span>Eliminar trabajo</span></button><button type="button" data-event-recurring="${r(a.id)}">
+  <span class="calendar-action-icon">🔁</span>
+  <span>Programar cortes periódicos</span>
+</button></div></div></section>`;
 
       document.body.appendChild(s);
     },
@@ -176,6 +352,41 @@
       }
     },
 
+    getNextRecurringDate(completedDate, recurring) {
+  const date = this.parseDateKey(completedDate);
+
+  if (
+    !recurring?.enabled ||
+    !Number.isInteger(Number(recurring.interval)) ||
+    Number(recurring.interval) < 1 ||
+    !["days", "weeks", "months"].includes(recurring.unit)
+  ) {
+    return "";
+  }
+
+  const interval = Number(recurring.interval);
+
+  if (recurring.unit === "days") {
+    date.setDate(date.getDate() + interval);
+  } else if (recurring.unit === "weeks") {
+    date.setDate(date.getDate() + interval * 7);
+  } else if (recurring.unit === "months") {
+    const day = date.getDate();
+    date.setDate(1);
+    date.setMonth(date.getMonth() + interval);
+
+    const lastDay = new Date(
+      date.getFullYear(),
+      date.getMonth() + 1,
+      0
+    ).getDate();
+
+    date.setDate(Math.min(day, lastDay));
+  }
+
+  return e.utils.dateKey(date);
+},
+
     async handleClick(t) {
       const a = t.target;
       if (!(a instanceof Element)) return;
@@ -193,10 +404,41 @@
       if (a.closest("[data-calendar-modal-close]")) return void this.closeModal();
       if (a.closest("[data-calendar-modal-overlay]") && a === a.closest("[data-calendar-modal-overlay]")) return void this.closeModal();
 
-      if (a.closest("[data-calendar-action]")) {
-        const t = a.closest("[data-calendar-action]").dataset.calendarAction;
-        return this.closeModal(), "visita" === t ? this.openVisitForm() : "corte" === t ? "function" == typeof e.cuts?.openForm ? e.cuts.openForm() : alert("No se encontró cuts.js. Revisá el orden de los scripts.") : "cliente" === t ? "function" == typeof e.clients?.openForm ? e.clients.openForm() : alert("No se encontró el formulario de clientes en clients.js.") : alert("Esta función todavía no está conectada."), void 0;
-      }
+if (a.closest("[data-calendar-action]")) {
+  const action = a.closest("[data-calendar-action]").dataset.calendarAction;
+
+  this.closeModal();
+
+  if (action === "visita") {
+    this.openVisitForm();
+  } else if (action === "corte") {
+  if (typeof e.cuts?.openForm === "function") {
+    e.cuts.openForm();
+  } else {
+    alert("No se encontró cuts.js.");
+  }
+  } else if (action === "cliente") {
+    if (typeof e.clients?.openForm === "function") {
+      e.clients.openForm();
+    } else {
+      alert("No se encontró el formulario de clientes.");
+    }
+  } else if (action === "pago" || action === "gasto") {
+    e.state.currentPage = "movimientos";
+    e.render();
+
+    const form = document.querySelector("#movementForm");
+
+    if (form) {
+      form.elements.type.value =
+        action === "pago" ? "ingreso" : "gasto";
+
+      form.elements.concept.focus();
+    }
+  }
+
+  return;
+}
 
       if (a.closest("[data-calendar-date]")) {
         const t = a.closest("[data-calendar-date]").dataset.calendarDate;
@@ -208,7 +450,24 @@
 
       const s = a.closest("[data-event-details-overlay]");
       if (s && a === s) return void s.remove();
+if (a.closest("[data-event-recurring]")) {
+  const id = a.closest("[data-event-recurring]").dataset.eventRecurring;
+  const cut = e.state.events.find(
+    event => String(event.id) === String(id)
+  );
 
+  if (!cut) return;
+
+  document.querySelector("[data-event-details-overlay]")?.remove();
+
+  if (typeof this.openRecurringForm === "function") {
+    this.openRecurringForm(cut);
+  } else {
+    alert("No se encontró el formulario de mantenimiento.");
+  }
+
+  return;
+}
       if (a.closest("[data-event-edit]")) {
         const t = a.closest("[data-event-edit]").dataset.eventEdit;
         const s = e.state.events.find(e => String(e.id) === String(t));
@@ -310,18 +569,19 @@ if (a.closest("[data-event-delete]")) {
           s.date = s.scheduledDate || s.date;
         }
       } else {
-        s.status = "realizado";
-        s.completed = true;
+  s.status = "realizado";
+  s.completed = true;
 
-        const today = e.utils.dateKey(new Date());
+  const today = e.utils.dateKey(new Date());
 
-        if (s.type === "visita_consulta") {
-          s.visitCompletedDate = today;
-        } else {
-          s.completedDate = today;
-          s.date = today;
-        }
-      }
+  if (s.type === "visita_consulta") {
+    s.visitCompletedDate = today;
+  } else {
+    s.completedDate = today;
+    s.date = today;
+
+  }
+}
 
       await this.persistEvents();
 

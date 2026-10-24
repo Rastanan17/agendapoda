@@ -386,7 +386,7 @@ window.AgendaPoda = window.AgendaPoda || {};
       const file = new File([blob], filename, { type: "image/png" });
 
       const text = [
-        "Comprobante de trabajo - Agenda Poda",
+        "Comprobante de trabajo - Pastos Zark",
         `Cliente: ${cut.clientName || "Cliente"}`,
         `Dirección: ${cut.address || "No informada"}`,
         `Localidad: ${cut.locality || "No informada"}`,
@@ -407,7 +407,7 @@ window.AgendaPoda = window.AgendaPoda || {};
         navigator.canShare({ files: [file] })
       ) {
         await navigator.share({
-          title: "Comprobante de Agenda Poda",
+          title: "Comprobante de Pastos Zark",
           text,
           files: [file]
         });

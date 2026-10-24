@@ -120,11 +120,59 @@
             </div>
 
             <div class="cut-form-field">
-              <label for="cutScheduledDate">Fecha programada *</label>
-              <input id="cutScheduledDate" name="scheduledDate"
-                type="date" required
-                value="${date}">
-            </div>
+  <label for="cutScheduledDate">Fecha programada *</label>
+  <input id="cutScheduledDate" name="scheduledDate"
+    type="date" required
+    value="${date}">
+</div>
+
+<div class="cut-form-field">
+  <label>
+    <input
+      type="checkbox"
+      name="recurring"
+      ${cut?.recurring?.enabled ? "checked" : ""}
+    >
+    Programar cortes periódicos
+  </label>
+  <small>
+    Activá esta opción si el cliente quiere mantenimiento recurrente.
+  </small>
+</div>
+
+<div class="cut-form-row" data-recurring-options
+  ${cut?.recurring?.enabled ? "" : "hidden"}>
+
+  <div class="cut-form-field">
+    <label>Repetir cada</label>
+    <input
+      name="recurringInterval"
+      type="number"
+      min="1"
+      max="365"
+      step="1"
+      value="${cut?.recurring?.interval || 17}"
+    >
+  </div>
+
+  <div class="cut-form-field">
+    <label>Unidad</label>
+    <select name="recurringUnit">
+      <option value="days"
+        ${cut?.recurring?.unit === "days" || !cut?.recurring?.unit ? "selected" : ""}>
+        Días
+      </option>
+      <option value="weeks"
+        ${cut?.recurring?.unit === "weeks" ? "selected" : ""}>
+        Semanas
+      </option>
+      <option value="months"
+        ${cut?.recurring?.unit === "months" ? "selected" : ""}>
+        Meses
+      </option>
+    </select>
+  </div>
+</div>
 
             <div class="cut-form-field">
               <label for="cutStatus">Estado del trabajo *</label>
@@ -195,6 +243,14 @@
 
       const form = modal.querySelector("[data-cut-form]");
       const status = form.elements.status;
+      const recurringCheckbox = form.elements.recurring;
+const recurringOptions = form.querySelector("[data-recurring-options]");
+
+if (recurringCheckbox && recurringOptions) {
+  recurringCheckbox.addEventListener("change", () => {
+    recurringOptions.hidden = !recurringCheckbox.checked;
+  });
+}
       const completedField = modal.querySelector(
         "[data-completed-date-field]"
       );
@@ -324,6 +380,20 @@
       const paid = Number(data.get("paid")) || 0;
       const paymentMethod = String(data.get("paymentMethod") || "pendiente");
       const scheduledDate = String(data.get("scheduledDate") || "");
+      const recurringEnabled = form.elements.recurring.checked;
+const recurringInterval = Number(form.elements.recurringInterval.value);
+const recurringUnit = form.elements.recurringUnit.value;
+
+if (
+  recurringEnabled &&
+  (!Number.isInteger(recurringInterval) || recurringInterval < 1)
+) {
+  this.showMessage(
+    modal,
+    "Ingresá un intervalo válido de al menos 1."
+  );
+  return;
+}
       const status = String(data.get("status") || "pendiente");
       const completedDate = String(data.get("completedDate") || "");
 
@@ -393,7 +463,20 @@
         balance: price - paid,
         paymentMethod,
         scheduledDate,
-        completedDate: status === "realizado" ? completedDate : "",
+recurring: recurringEnabled
+  ? {
+      enabled: true,
+      interval: recurringInterval,
+      unit: recurringUnit,
+      nextDate: scheduledDate
+    }
+  : {
+      enabled: false,
+      interval: 0,
+      unit: "days",
+      nextDate: ""
+    },
+completedDate: status === "realizado" ? completedDate : "",
         status,
         completed: status === "realizado",
         date: status === "realizado" ? completedDate : scheduledDate,
@@ -404,10 +487,10 @@
       };
 
       if (existing) {
-        Object.assign(existing, cut);
-      } else {
-        AP.state.events.push(cut);
-      }
+  Object.assign(existing, cut);
+} else {
+  AP.state.events.push(cut);
+}
 
       if (typeof AP.storage?.save === "function") {
         AP.storage.save();
